@@ -1,0 +1,51 @@
+{
+  "name": "the harvest",
+  "short_name": "harvest",
+  "description": "the harvest is plenty, the laborers are few.",
+  "start_url": "index.html?utm=homescreen",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#b19c62",
+  "theme_color": "#b19c62",
+  "icons": [
+    {
+      "src": "images/favicons/android-icon-36x36.png",
+      "type": "image/png",
+      "sizes": "36x36"
+    },
+    {
+      "src": "images/favicons/android-icon-48x48.png",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "images/favicons/android-icon-72x72.png",
+      "type": "image/png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "images/favicons/favicon-96x96.png",
+      "type": "image/png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "images/favicons/android-icon-144x144.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "images/favicons/android-icon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "images/favicons/android-icon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "author": {
+    "name": "Bill Girten",
+    "website": "https://www.digitalharvestingworks.org"
+  }
+}
