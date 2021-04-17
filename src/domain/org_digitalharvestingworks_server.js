@@ -6,11 +6,11 @@ var app = require("express")(),
     nodemailer = require('nodemailer'),
     najax = require("najax"),
     MongoClient = require("mongodb").MongoClient,
-    mongoDBtelawireURL = "mongodb://localhost:27017/telawire",
+    mongoDBdigitalharvestingworksURL = "mongodb://localhost:27017/digitalharvestingworks",
     HTMLResponseHeader = {"Content-Type": "text/html", "Access-Control-Allow-Origin":"*"},
     JSONResponseHeader = {"Content-Type": "application/json", "Access-Control-Allow-Origin":"*"},
     mongoCleanupInterval = null,
-    telawireDB = null,
+    digitalharvestingworksDB = null,
     dateTimeEpoch = null,
     platform = process.env.PLATFORM;
 
@@ -24,14 +24,19 @@ server = require("http").createServer(app);
 io = require("socket.io")(server);
 
 
-// MongoClient.connect(mongoDBtelawireURL, {server: {poolSize: 1}}, function(err, db) {
-//     if(err) {
-//         console.log("Unable to connect to the mongoDB server. Error:", err);
-//     } else {
-//         telawireDB = db;
-//         console.log("telawire DB is ready");
-//     }
-// });
+MongoClient.connect(mongoDBdigitalharvestingworksURL,
+                    {
+                      useNewUrlParser: true,
+                      useUnifiedTopology: true
+                    },
+                    (err, dbref) => {
+  if(err) {
+      console.log("Error while connecting to mongoDB" + err);
+    }else{
+      console.log("digitalharvestingworks DB is ready");
+      digitalharvestingworksDB = dbref;
+  }
+});
 
 
 server.listen(10913);
@@ -225,7 +230,7 @@ app.get("/audio/wand.wav", function (req, res) {
 app.get("/geti18nStuff", function (req, res) {
     var requestedLanguageCode = req.param("langcode");
     var languageSet = {};
-    var i18nCollection = telawireDB.collection("i18n");
+    var i18nCollection = digitalharvestingworksDB.collection("i18n");
     i18nCollection.find({"langcode":requestedLanguageCode}).toArray(function (err, results) {
         if(err) {
             console.log(err);
@@ -244,7 +249,7 @@ app.get("/geti18nStuff", function (req, res) {
 
 app.get("/getLegalInfo", function (req, res) {
     var legalInfo = {};
-    var legalCollection = telawireDB.collection("legal");
+    var legalCollection = digitalharvestingworksDB.collection("legal");
     legalCollection.find({},{_id:0}).toArray(function (err, results) {
         if(err) {
             console.log(err);
@@ -268,15 +273,15 @@ app.post('/sitepost', function(req, res, next) {
         port: 587,
         secureConnection: false,                    
         auth: {
-            user: "bxgirten@telawire.com",
+            user: "bxgirten@digitalharvestingworks.com",
             pass: "Sapphir30!"
         }
     });
     msg = req.body.message + "\n\n- " + req.body.name;
     transporter.sendMail({
-        from: "bxgirten@telawire.com",
-        to: "jharris@telawire.com",
-        cc: "bxgirten@telawire.com",
+        from: "bxgirten@digitalharvestingworks.com",
+        to: "jharris@digitalharvestingworks.com",
+        cc: "bxgirten@digitalharvestingworks.com",
         bcc: "sagirten@gmail.com",
         subject: "Comments from a videopeers.info visitor",
         generateTextFromHTML: false,
@@ -296,7 +301,7 @@ app.post('/sitepost', function(req, res, next) {
 app.get("/getVideoPeersStatsDaily", function (req, res) {
     var vpStatsData = "[";
     //var vpStatsData = [['English', 3],['French', 1],['German', 1],['Spanish', 2]];
-    var vpStatsCollection = telawireDB.collection("videopeersstats");
+    var vpStatsCollection = digitalharvestingworksDB.collection("videopeersstats");
     var chartDataSwitch = 0;
     if(req.param("sw")) chartDataSwitch = parseInt(req.param("sw"));
 
@@ -371,7 +376,7 @@ console.log("Request to create room " + room);
             socket.join(room);
             console.log("room " + room + " has " + (numClients + 1) + " client");
 
-            var videoPeersCollection = telawireDB.collection("videopeers");
+            var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
 console.log("inserting = " + profile.nickname);
             videoPeersCollection.find({"room":room, "profile.nickname":profile.nickname}).toArray(function (err, results) {
                 if(err) {
@@ -414,7 +419,7 @@ console.log(">>> INSIDE OF find video peers" + searchData);
         var localNickname = searchObj.localNickname;
         var room = searchObj.room;
 
-        var videoPeersCollection = telawireDB.collection("videopeers");
+        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
 // CREATE A DYNAMIC, BUILDABLE STRING TO PERFORM A FIND
         var searchCriteria = '{';
         if(searchObj.remoteNickname) {
@@ -461,7 +466,7 @@ console.log("*** BAILING ***");
 
     socket.on("video chat request", function(socketID, requestorNickname, requestorPhoto, requestorRoom, requestorSocketID) {
 console.log(">>> ABOUT TO INVITE socketID " + socketID + " TO CHAT WITH socketID", requestorSocketID);
-        var videoPeersCollection = telawireDB.collection("videopeers");
+        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
         videoPeersCollection.find({"room": requestorRoom, "profile.nickname":requestorNickname}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
@@ -541,7 +546,7 @@ console.log(">>> GOT A WEB TOURIST MESSAGE FOR SOCKET " + socketID);
 
     socket.on("exit room", function(nickname, room) {
 console.log(">>> " + nickname + " IS EXITING ROOM " + room);
-        var videoPeersCollection = telawireDB.collection("videopeers");
+        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
         videoPeersCollection.find({"room":room, "profile.nickname":nickname}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
@@ -584,7 +589,7 @@ console.log(">>> forcing " + remoteSocketID + " TO EXIT ROOM");
     function mongoCleanup() {
         var roomManifest = null;
 
-        var videoPeersCollection = telawireDB.collection("videopeers");
+        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
         videoPeersCollection.find({}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
@@ -616,7 +621,7 @@ console.log(">>> orphan(s) found");
     function captureVideoPeersStats(socketID, beginStamp, endStamp, profile) {
         delete profile.nickname;
         delete profile.photo;
-        var videoPeersStats = telawireDB.collection("videopeersstats");
+        var videoPeersStats = digitalharvestingworksDB.collection("videopeersstats");
 console.log(">>> stats captured");
         videoPeersStats.insert({"logged":endStamp, "socketID":socketID,  "beginStamp":beginStamp, "endStamp":endStamp, "profile":profile}, function (err, results) {
             if(err) {
