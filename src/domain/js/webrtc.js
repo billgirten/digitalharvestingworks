@@ -211,14 +211,14 @@ console.log(">>> got webtourist message")
 
 
 function poseForSnapshot() {
-/*
+
     if(navigator.getUserMedia) {
         navigator.getUserMedia(constraints, getUserMediaSuccess, getUserMediaError);
         if(null == room) initConnection();
     } else {
         alert("Your browser does not support getUserMedia API");
     }
-*/  
+
     navigator.mediaDevices.getUserMedia(constraints)
         .then(getUserMediaSuccess)
         .catch(function(e) {

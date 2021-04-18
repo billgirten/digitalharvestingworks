@@ -6,7 +6,7 @@ var app = require("express")(),
     nodemailer = require('nodemailer'),
     najax = require("najax"),
     MongoClient = require("mongodb").MongoClient,
-    mongoDBdigitalharvestingworksURL = "mongodb://localhost:27017/digitalharvestingworks",
+    mongoDBdigitalharvestingworksURL = "mongodb://localhost:27017",
     HTMLResponseHeader = {"Content-Type": "text/html", "Access-Control-Allow-Origin":"*"},
     JSONResponseHeader = {"Content-Type": "application/json", "Access-Control-Allow-Origin":"*"},
     mongoCleanupInterval = null,
@@ -29,12 +29,12 @@ MongoClient.connect(mongoDBdigitalharvestingworksURL,
                       useNewUrlParser: true,
                       useUnifiedTopology: true
                     },
-                    (err, dbref) => {
+                    (err, dbReference) => {
   if(err) {
       console.log("Error while connecting to mongoDB" + err);
-    }else{
+  } else{
+      digitalharvestingworksDB = dbReference.db("digitalharvestingworks");
       console.log("digitalharvestingworks DB is ready");
-      digitalharvestingworksDB = dbref;
   }
 });
 
@@ -228,9 +228,9 @@ app.get("/audio/wand.wav", function (req, res) {
 });
 
 app.get("/geti18nStuff", function (req, res) {
-    var requestedLanguageCode = req.param("langcode");
+    var requestedLanguageCode = req.query.langcode;
     var languageSet = {};
-    var i18nCollection = digitalharvestingworksDB.collection("i18n");
+    var i18nCollection = digitalharvestingworksDB.collection("digitalharvestingworks_i18n");
     i18nCollection.find({"langcode":requestedLanguageCode}).toArray(function (err, results) {
         if(err) {
             console.log(err);
@@ -303,7 +303,7 @@ app.get("/getVideoPeersStatsDaily", function (req, res) {
     //var vpStatsData = [['English', 3],['French', 1],['German', 1],['Spanish', 2]];
     var vpStatsCollection = digitalharvestingworksDB.collection("videopeersstats");
     var chartDataSwitch = 0;
-    if(req.param("sw")) chartDataSwitch = parseInt(req.param("sw"));
+    if(req.query.sw) chartDataSwitch = parseInt(req.query.sw);
 
     switch(chartDataSwitch) {
 

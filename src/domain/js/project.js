@@ -647,17 +647,17 @@ function establishAudioContext() {
     } catch(e) {
         throw new Error('Web Audio API not supported.');
     }
-    // var xhr = new XMLHttpRequest();
-    // xhr.open("GET", "//localhost:10913/audio/wand.wav", true);
-    // xhr.responseType = "arraybuffer";
-    // xhr.onload = function() {
-    //     audioContext.decodeAudioData(xhr.response, function(buffer) {
-    //         sound = buffer;
-    //     }, function(err) {
-    //         throw new Error(err);
-    //     });
-    // };
-    // xhr.send();
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "//localhost:10913/audio/wand.wav", true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = function() {
+        audioContext.decodeAudioData(xhr.response, function(buffer) {
+            sound = buffer;
+        }, function(err) {
+            throw new Error(err);
+        });
+    };
+    xhr.send();
 }
 
 
@@ -735,8 +735,8 @@ function establishContextLanguage() {
             document.querySelector("#profile-age-range-label").innerText = contextLanguageSettings.agerange;
             document.querySelector("#profile-snapshot-label").innerText = contextLanguageSettings.snapshot;
             //document.querySelector("#modal-web-tourist-experimental").innerText = "(" + contextLanguageSettings.experimental + ")";
-            document.querySelector("#modal-web-tourist-site-back-button").innerText = contextLanguageSettings.back;
-            document.querySelector("#modal-web-tourist-site-go-button").innerText = contextLanguageSettings.go;
+            // document.querySelector("#modal-web-tourist-site-back-button").innerText = contextLanguageSettings.back;
+            // document.querySelector("#modal-web-tourist-site-go-button").innerText = contextLanguageSettings.go;
             document.querySelector("#modal-share-stuff-dropfiles").innerText = contextLanguageSettings.dropfiles;
             document.querySelector("#footer-span-addons").innerText = contextLanguageSettings.addons;
             document.querySelector("#footer-span-textchat").innerText = contextLanguageSettings.textchat;
@@ -761,9 +761,9 @@ function establishContextLanguage() {
             document.querySelector("#option-new-fluent").innerText = langlevelArray[3];
             document.querySelector("#connection-remote-peer-native-language").selectedIndex = -1;
         }
-    };
-    // xhr.open("GET", "//www.videopeers.net/geti18nStuff?langcode=" + languageCode, true);
-    // xhr.send();
+    };    
+    xhr.open("GET", "//localhost:10913/geti18nStuff?langcode=" + languageCode, true);
+    xhr.send();
 }
 
 
@@ -777,7 +777,7 @@ function fetchLegalInfo() {
             $('#pp_section').append(legalInfo.privacy);
         }
     };
-    xhr.open("GET", "//www.videopeers.net/getLegalInfo", true);
+    xhr.open("GET", "//localhost:10913/getLegalInfo", true);
     xhr.send();    
 }
 
