@@ -4,13 +4,6 @@ var isMediaPermissionGranted = false,
     localStream = null,
     webTouristStream = null,
     socket = null,
-    localVideo = document.querySelector("#profile-local-video"),
-
-    snapshot = document.querySelector("#profile-local-snapshot"),
-    snapshotContext = snapshot.getContext("2d"),
-    snapshotContextW = 320,
-    snapshotContextH = 160,
-    snapshotDataURL = null,
 
     photo = document.querySelector("#connection-local-photo"),
     photoContext = photo.getContext("2d"),
@@ -229,35 +222,7 @@ function poseForSnapshot() {
 
 function takeSnapshot() {
     if(null == localStream) {
-        if(isMediaPermissionGranted) {
-            poseForSnapshot();
-        } else {
-            document.querySelector("#profile-hidden-modal-getUserMedia").click();
-        }
-    } else {
-        if(document.querySelector("#profile-snapshot-label").innerHTML.toLowerCase() == contextLanguageSettings.snapshot.toLowerCase()) {
-            var ua = navigator.userAgent;
-            if(ua.toLowerCase().indexOf("firefox") > -1) {
-                if(ua.toLowerCase().indexOf("android") > -1) {
-                    if(ua.indexOf("43") > -1) {
-                        snapshotContext.translate(snapshotContextW - 1, snapshotContextH - 1);
-                        snapshotContext.rotate(Math.PI);
-                    }
-                }
-            }
-            snapshotContext.drawImage(localVideo, 0, 0, snapshotContextW, snapshotContextH);                
-            document.querySelector("#profile-local-video").setAttribute("style", "display:none");
-            document.querySelector("#profile-local-snapshot").setAttribute("style", "display:block");
-            document.querySelector("#profile-snapshot-label").innerHTML = contextLanguageSettings.retake;
-            snapshotDataURL = snapshot.toDataURL("image/png");
-            snapshotDataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-            localProfile.photo = snapshotDataURL;
-            saveLocalProfile();
-        } else {
-            document.querySelector("#profile-local-video").setAttribute("style", "display:block");
-            document.querySelector("#profile-local-snapshot").setAttribute("style", "display:none");
-            document.querySelector("#profile-snapshot-label").innerHTML = contextLanguageSettings.snapshot;
-        }
+        poseForSnapshot();
     }
 }
 
@@ -268,24 +233,11 @@ function flashPhoto() {
     photoDataURL = photo.toDataURL("image/png");
     photoDataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     localProfile.photo = photoDataURL;
-    saveLocalProfile();
     renderLocalPhoto();
 }
 
 
 function getUserMediaSuccess(stream) {
-    localStream = stream;
-    localVideo.srcObject = stream;
-    localVideo.muted = true;
-    localVideoSmall.srcObject = stream;
-    localVideoSmall.muted = true;
-    localVideoSmall.removeAttribute("controls");
-    localChatVideoSmall.srcObject = stream;
-    localChatVideoSmall.muted = true;
-    localChatVideoSmall.removeAttribute("controls");
-    localShareVideoSmall.srcObject = stream;
-    localShareVideoSmall.muted = true;
-    localShareVideoSmall.removeAttribute("controls");
     meConnectedLocalVideo.srcObject = stream;
     meConnectedLocalVideo.muted = true;
     document.querySelector("#connection-button-presence").innerText = contextLanguageSettings.unavailable;

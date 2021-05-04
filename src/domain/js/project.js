@@ -668,25 +668,8 @@ function establishContextLanguage() {
         if(xhr.readyState == 4 && xhr.status == 200) {
             contextLanguageSettings = JSON.parse(xhr.responseText);
             langArray = contextLanguageSettings.languages.split(",");
-            document.querySelector("#langen").innerText = langArray[0];
-            document.querySelector("#option-native-english").innerText = langArray[0];
-            document.querySelector("#option-new-english").innerText = langArray[0];
-            document.querySelector("#option-find-english").innerText = langArray[0];
-            document.querySelector("#langfr").innerText = langArray[1];
-            document.querySelector("#option-native-french").innerText = langArray[1];
-            document.querySelector("#option-new-french").innerText = langArray[1];
-            document.querySelector("#option-find-french").innerText = langArray[1];
-            document.querySelector("#langde").innerText = langArray[2];
-            document.querySelector("#option-native-german").innerText = langArray[2];
-            document.querySelector("#option-new-german").innerText = langArray[2];
-            document.querySelector("#option-find-german").innerText = langArray[2];
-            document.querySelector("#langsp").innerText = langArray[3];
-            document.querySelector("#option-native-spanish").innerText = langArray[3];
-            document.querySelector("#option-new-spanish").innerText = langArray[3];
-            document.querySelector("#option-find-spanish").innerText = langArray[3];
             document.querySelector("#start-view-welcome").innerText = contextLanguageSettings.welcome;
             document.querySelector("#start-nickname-label").innerText = contextLanguageSettings.nickname;
-            document.querySelector("#profile-nickname-label").innerText = contextLanguageSettings.nickname;
             document.querySelector("#connection-local-nickname-label").innerText = contextLanguageSettings.nickname;
             document.querySelector("#connection-local-peer-heading").innerText = contextLanguageSettings.me;
             document.querySelector("#connection-button-available").innerText = contextLanguageSettings.available;
@@ -720,20 +703,6 @@ function establishContextLanguage() {
             document.querySelector("#modal-helpful-tips-keep-blurb").innerHTML = contextLanguageSettings.tipskeep;
             document.querySelector("#modal-helpful-tips-close-keep").innerHTML = "<span class='icon icon-close'></span>&nbsp;" + contextLanguageSettings.close;
             document.querySelector("#modal-helpful-tips-ok").innerText = contextLanguageSettings.ok;
-            document.querySelector("#profile-about-me-card-heading").innerText = contextLanguageSettings.aboutme;
-            document.querySelector("#profile-my-interests-label").innerText = contextLanguageSettings.myinterests;
-            document.querySelector("#profile-my-hobbies-label").innerText = contextLanguageSettings.myhobbies;
-            document.querySelector("#profile-interests-card-heading").innerText = contextLanguageSettings.things;
-            document.querySelector("#profile-native-language-label").innerText = contextLanguageSettings.nativelanguage;
-            document.querySelector("#profile-native-language-level-label").innerText = contextLanguageSettings.nativelanguagelevel;
-            document.querySelector("#profile-new-language-label").innerText = contextLanguageSettings.newlanguage;
-            document.querySelector("#profile-new-language-level-label").innerText = contextLanguageSettings.newlanguagelevel;
-            document.querySelector("#profile-my-languages-card-heading").innerText = contextLanguageSettings.mylanguages;
-            document.querySelector("#profile-places-near-me-card-heading").innerText = contextLanguageSettings.interesting;
-            document.querySelector("#profile-my-general-location-label").innerText = contextLanguageSettings.mylocation;
-            document.querySelector("#profile-interesting-places-near-me-label").innerText = contextLanguageSettings.nearme;
-            document.querySelector("#profile-age-range-label").innerText = contextLanguageSettings.agerange;
-            document.querySelector("#profile-snapshot-label").innerText = contextLanguageSettings.snapshot;
             //document.querySelector("#modal-web-tourist-experimental").innerText = "(" + contextLanguageSettings.experimental + ")";
             // document.querySelector("#modal-web-tourist-site-back-button").innerText = contextLanguageSettings.back;
             // document.querySelector("#modal-web-tourist-site-go-button").innerText = contextLanguageSettings.go;
@@ -742,7 +711,6 @@ function establishContextLanguage() {
             document.querySelector("#footer-span-textchat").innerText = contextLanguageSettings.textchat;
             document.querySelector("#footer-span-webtourist").innerText = contextLanguageSettings.webtourist;
             document.querySelector("#footer-span-sharestuff").innerText = contextLanguageSettings.sharestuff;
-            document.querySelector("#profile-button-save").innerText = contextLanguageSettings.save;
             document.querySelector("#connection-button-disconnect").innerText = contextLanguageSettings.hangup;
             document.querySelector("#modal-button-hangup-available-peer").innerText = contextLanguageSettings.hangup;
             document.querySelector("#modal-available-peers-heading").innerText = contextLanguageSettings.wantstochat;
@@ -754,11 +722,6 @@ function establishContextLanguage() {
             //}
             document.querySelector("#modal-getUserMedia-heading").innerText = contextLanguageSettings.getusermedia_title;
             document.querySelector("#modal-getUserMedia-advisory").innerText = contextLanguageSettings.getusermedia_advisory;
-            langlevelArray = contextLanguageSettings.languagelevel.split(",");
-            document.querySelector("#option-new-beginner").innerText = langlevelArray[0];
-            document.querySelector("#option-new-intermediate").innerText = langlevelArray[1];
-            document.querySelector("#option-new-advanced").innerText = langlevelArray[2];
-            document.querySelector("#option-new-fluent").innerText = langlevelArray[3];
             document.querySelector("#connection-remote-peer-native-language").selectedIndex = -1;
         }
     };    
@@ -827,12 +790,6 @@ function startReset() {
         document.querySelector("#start-nickname").setAttribute("disabled", true);
         document.querySelector("#start-nickname-label").setAttribute("style", "display:none");
         document.querySelector("#start-button-next").disabled = false;
-        document.querySelector("#profile-nickname").value = localProfile.nickname;
-        document.querySelector("#profile-age-range").value = localProfile.ageRange;
-        document.querySelector("#profile-native-language").value = localProfile.nativeLanguage;
-        document.querySelector("#profile-native-language-level").value = localProfile.nativeLanguageLevel;
-        document.querySelector("#profile-new-language").value = localProfile.newLanguage;
-        document.querySelector("#profile-new-language-level").value = localProfile.newLanguageLevel;
         document.querySelector("#connection-remote-peer-native-language").value = localProfile.newLanguage;
         if(localProfile.myGeneralLocation) document.querySelector("#profile-my-general-location").value = localProfile.myGeneralLocation;
         if(localProfile.interestingPlacesNearMe) document.querySelector("#profile-interesting-places-near-me").value = localProfile.interestingPlacesNearMe;
@@ -864,7 +821,6 @@ function keyNickname() {
     var tempNickname = document.querySelector("#start-nickname").value.trim();
     if(tempNickname.length > 0) {
         document.querySelector("#start-button-next").disabled = false;
-        document.querySelector("#profile-nickname").value = document.querySelector("#start-nickname").value;
         document.querySelector("#connection-local-nickname").value = document.querySelector("#start-nickname").value;
     } else {
         document.querySelector("#start-button-next").disabled = true;
@@ -872,64 +828,9 @@ function keyNickname() {
 }
 
 
-function saveProfile() {
-    if(document.querySelector("#profile-nickname").value !== " " && document.querySelector("#profile-nickname").value !== "") {
-        localProfile.nickname = document.querySelector("#profile-nickname").value;
-        document.querySelector("#start-nickname").value = document.querySelector("#profile-nickname").value;
-        document.querySelector("#menu-thumbnail-nickname").value = document.querySelector("#profile-nickname").value;
-        document.querySelector("#connection-local-nickname").value = document.querySelector("#profile-nickname").value;
-    }
-    if(document.querySelector("#profile-age-range").selectedIndex > -1) {
-        if(document.querySelector("#profile-age-range")[document.querySelector("#profile-age-range").selectedIndex].value !== " ") {
-            localProfile.ageRange = document.querySelector("#profile-age-range")[document.querySelector("#profile-age-range").selectedIndex].value;
-        }
-    }
-    if(document.querySelector("#profile-native-language").selectedIndex > -1) {
-        if(document.querySelector("#profile-native-language")[document.querySelector("#profile-native-language").selectedIndex].value !== " ") {
-            localProfile.nativeLanguage = document.querySelector("#profile-native-language")[document.querySelector("#profile-native-language").selectedIndex].value;
-        }
-    }
-    if(document.querySelector("#profile-native-language-level").selectedIndex > -1) {
-        if(document.querySelector("#profile-native-language-level")[document.querySelector("#profile-native-language-level").selectedIndex].value !== " ") {
-            localProfile.nativeLanguageLevel = document.querySelector("#profile-native-language-level")[document.querySelector("#profile-native-language-level").selectedIndex].value;
-        }       
-    }
-    if(document.querySelector("#profile-new-language").selectedIndex > -1) {
-        if(document.querySelector("#profile-new-language")[document.querySelector("#profile-new-language").selectedIndex].value !== " ") {
-            localProfile.newLanguage = document.querySelector("#profile-new-language")[document.querySelector("#profile-new-language").selectedIndex].value;
-            document.querySelector("#connection-remote-peer-native-language").value = document.querySelector("#profile-new-language")[document.querySelector("#profile-new-language").selectedIndex].value;
-        }
-    }
-    if(document.querySelector("#profile-new-language-level").selectedIndex > -1) {
-        if(document.querySelector("#profile-new-language-level")[document.querySelector("#profile-new-language-level").selectedIndex].value !== " ") {
-            localProfile.newLanguageLevel = document.querySelector("#profile-new-language-level")[document.querySelector("#profile-new-language-level").selectedIndex].value;
-        }
-    }
-    if(document.querySelector("#profile-my-general-location").value !== " ") {
-        localProfile.myGeneralLocation = document.querySelector("#profile-my-general-location").value;
-    }
-    if(document.querySelector("#profile-interesting-places-near-me").value !== " ") {
-        localProfile.interestingPlacesNearMe = document.querySelector("#profile-interesting-places-near-me").value;
-    }
-    if(document.querySelector("#profile-my-hobbies").value !== " ") {
-        localProfile.myHobbies = document.querySelector("#profile-my-hobbies").value;
-    }
-    if(document.querySelector("#profile-my-interests").value !== " ") {
-        localProfile.myInterests = document.querySelector("#profile-my-interests").value;
-    }
-    localProfile.languageCode = languageCode;
-    saveLocalProfile();
-}
-
-
-
 function startJump() {
     document.querySelector("#menu-link-profile-settings").style.display = "none";
-    if(document.querySelector("#start-button-next").innerText.toLowerCase() == contextLanguageSettings.start.toLowerCase()) {
-        nextCard("connection");
-    } else {
-        nextCard("profile");
-    }
+    nextCard("connection");
 }
 
 
@@ -957,18 +858,10 @@ function nextCard(requestedCard) {
 
     }
     if(requestedCard == "connection") {
-        saveProfile();
-        if(localProfile.photo) {
-            document.querySelector("#start-photo").src = localProfile.photo;
-            document.querySelector("#menu-thumbnail-photo").src = localProfile.photo;
-            document.querySelector("#connection-avatar-local-photo").src = localProfile.photo;
-        } else {
-            takeSnapshot();
-            renderLocalPhoto();
-        }
+        takeSnapshot();
+        renderLocalPhoto();
         if(localStream) stopMediaStream();
         document.querySelector("#start-view").style.display = "none"; 
-        document.querySelector("#profile-view").style.display = "none";
         document.querySelector("#connection-view").style.display = "block";
         document.querySelector("#footer-button").style.display = "none";
         document.querySelector("#menu-link-profile-settings").style.display = "block";
