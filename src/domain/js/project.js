@@ -323,11 +323,6 @@ $(document).ready(function() {
         startJump();
     });
 
-    $('#menu-link-profile-settings').click(function() {
-        nextCard("profile");
-        closeSettingsAside();
-    });
-
     $('#menu-link-clear-profile-settings').click(function() {
         clearSettings();
         wipeClean();
@@ -378,21 +373,13 @@ $(document).ready(function() {
         isRemoteHangup = true;
         disconnectFromNetwork();
     });
-/*
-    $("#connection-remote-nickname").keyup(function(evt) {
-        if(evt.keyCode == 13) {
-            if(document.querySelector("#connection-button-find-peers").disabled == false) {
-                findVideoPeers();
-            }
-        }
-    });
-*/
+
     $('#connection-button-find-peers').click(function() {
-        findVideoPeers();
+        findVideoFriends();
     });
 
     $('#connection-button-invite-peer').click(function() {
-        inviteVideoPeer();
+        inviteVideoFriend();
     });
 
     $('#modal-button-check-media-permission').click(function() {
@@ -623,7 +610,7 @@ console.log("about to postMessage");
         document.querySelector("#profile-view").style.display = "none";
         document.querySelector("#connection-view").style.display = "block";
         document.querySelector("#footer-button").style.display = "none";
-        document.querySelector("#menu-link-profile-settings").style.display = "block";
+        document.querySelector("#-settings").style.display = "block";
         currentPanel = "connection";
         poseForSnapshot();
     }
@@ -683,11 +670,9 @@ function establishContextLanguage() {
             document.querySelector("#connection-remote-nickname-label").innerText = contextLanguageSettings.nickname;
             document.querySelector("#connection-button-find-peers").innerText = contextLanguageSettings.findpeers;
             document.querySelector("#menu-language").innerHTML = "<span class='icon icon-language'></span>" + contextLanguageSettings.language;
-            document.querySelector("#modal-about-h2").innerText = contextLanguageSettings.about + " Video Peers";
+            document.querySelector("#modal-about-h2").innerText = contextLanguageSettings.about + " Video Friends";
             document.querySelector("#menu-about").innerHTML = "<span class='icon icon-info-outline'></span>" + contextLanguageSettings.about;
             document.querySelector("#menu-helpful-tips").innerHTML = "<span class='icon icon-help'></span>" + contextLanguageSettings.tips;
-            document.querySelector("#menu-link-profile-settings").innerHTML = "<span class='icon icon-settings'></span>" + contextLanguageSettings.settings;
-            document.querySelector("#menu-link-clear-profile-settings").innerHTML =  "<span class='icon icon-delete'></span>" + contextLanguageSettings.deleteprofilesettings;
             document.querySelector("#menu-link-exit").innerHTML =  "<span class='icon icon-exit-to-app'></span>" + contextLanguageSettings.exit;
             document.querySelector("#modal-about-credits").innerHTML = contextLanguageSettings.credits;
             document.querySelector("#modal-about-ok").innerText = contextLanguageSettings.ok;
@@ -778,23 +763,12 @@ function shareStuffTransferPrep(file) {
 
 
 function startReset() {
-    loadLocalProfile();
     if(localProfile.nickname) {
-        if(localProfile.photo) renderLocalPhoto();
-        if(localProfile.languageCode) {
-            languageCode = localProfile.languageCode;
-            establishContextLanguage();
-        }
         document.querySelector("#menu-thumbnail-nickname").innerText = localProfile.nickname;
         document.querySelector("#start-nickname").value = localProfile.nickname;
         document.querySelector("#start-nickname").setAttribute("disabled", true);
         document.querySelector("#start-nickname-label").setAttribute("style", "display:none");
         document.querySelector("#start-button-next").disabled = false;
-        document.querySelector("#connection-remote-peer-native-language").value = localProfile.newLanguage;
-        if(localProfile.myGeneralLocation) document.querySelector("#profile-my-general-location").value = localProfile.myGeneralLocation;
-        if(localProfile.interestingPlacesNearMe) document.querySelector("#profile-interesting-places-near-me").value = localProfile.interestingPlacesNearMe;
-        if(localProfile.myHobbies) document.querySelector("#profile-my-hobbies").value = localProfile.myHobbies;
-        if(localProfile.myInterests) document.querySelector("#profile-my-interests").value = localProfile.myInterests;
     }
 }
 
@@ -829,7 +803,6 @@ function keyNickname() {
 
 
 function startJump() {
-    document.querySelector("#menu-link-profile-settings").style.display = "none";
     nextCard("connection");
 }
 
@@ -838,33 +811,30 @@ function nextCard(requestedCard) {
     currentPanel = requestedCard;
     if(requestedCard == "start") {
         startReset();
-        document.querySelector("#menu-link-profile-settings").style.display = "none";
         document.querySelector("#connection-view").style.display = "none";
         document.querySelector("#profile-view").style.display = "none";
         document.querySelector("#footer-button").style.display = "none";
         document.querySelector("#start-view").style.display = "block"; 
         if(localStream) stopMediaStream();
     }
-    if(requestedCard == "profile") {
-        localProfile.nickname = document.querySelector("#start-nickname").value;
-        saveLocalProfile();
-        document.querySelector("#start-view").style.display = "none"; 
-        document.querySelector("#connection-view").style.display = "none";
-        document.querySelector("#profile-view").style.display = "block";
-        document.querySelector("#footer-button").style.display = "none";
-        document.querySelector("#menu-link-profile-settings").style.display = "block";
-        if(localStream) stopMediaStream();
-        poseForSnapshot();
+    // if(requestedCard == "profile") {
+    //     localProfile.nickname = document.querySelector("#start-nickname").value;
+    //     saveLocalProfile();
+    //     document.querySelector("#start-view").style.display = "none"; 
+    //     document.querySelector("#connection-view").style.display = "none";
+    //     document.querySelector("#profile-view").style.display = "block";
+    //     document.querySelector("#footer-button").style.display = "none";
+    //     if(localStream) stopMediaStream();
+    //     poseForSnapshot();
 
-    }
+    // }
     if(requestedCard == "connection") {
+        localProfile.nickname = document.querySelector("#start-nickname").value;
         takeSnapshot();
-        renderLocalPhoto();
         if(localStream) stopMediaStream();
         document.querySelector("#start-view").style.display = "none"; 
         document.querySelector("#connection-view").style.display = "block";
         document.querySelector("#footer-button").style.display = "none";
-        document.querySelector("#menu-link-profile-settings").style.display = "block";
     }
 }
 
@@ -874,7 +844,7 @@ function connectToNetwork() {
 }
 
 
-function inviteVideoPeer() {
+function inviteVideoFriend() {
     if(document.querySelector("#connection-remote-nickname").value.length < 2) {
         document.querySelector("#find-available-peers-msg").innerHTML = document.querySelector("#connection-remote-nickname-label").innerText + "?";
         $("#find-available-peers-msg").stop().fadeIn(400).delay(1200).fadeOut(400);
@@ -891,7 +861,7 @@ function inviteVideoPeer() {
 }
 
 
-function findVideoPeers() {
+function findVideoFriends() {
     flashPhoto();
     // create matching Object here and pass to emit to socket
     var searchObj = {};
@@ -906,7 +876,7 @@ function findVideoPeers() {
         }
     }
     searchObj.languageLevel = 3; //fluent
-    socket.emit("find video peers", JSON.stringify(searchObj));
+    socket.emit("find video friends", JSON.stringify(searchObj));
 }
 
 
@@ -1397,16 +1367,7 @@ function clearSettings() {
     document.querySelector("#start-button-next").innerText = "Next";
     document.querySelector("#start-button-next").disabled = true;
     document.querySelector("#profile-nickname").value = " ";
-    document.querySelector("#profile-age-range").value = " ";
-    document.querySelector("#profile-native-language").value = " ";
-    document.querySelector("#profile-native-language-level").value = " ";
-    document.querySelector("#profile-new-language").value = " ";
-    document.querySelector("#profile-new-language-level").value = " ";
     document.querySelector("#connection-remote-peer-native-language").value = " ";
-    document.querySelector("#profile-my-general-location").value = " ";
-    document.querySelector("#profile-interesting-places-near-me").value = " ";
-    document.querySelector("#profile-my-hobbies").value = " ";
-    document.querySelector("#profile-my-interests").value = " ";
 }
 
 function cleanExit(isClean) {

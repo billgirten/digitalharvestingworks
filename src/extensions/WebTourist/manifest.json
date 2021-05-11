@@ -1,7 +1,7 @@
 {
-  "name": "Video Peers Web Tourist",
+  "name": "Video Friends Web Tourist",
   "short_name": "Share Screen",
-  "description": "Share your screen with Video Peers using Chrome",
+  "description": "Share your screen with Video Friends using Chrome",
   "version": "1.0.1",
   "manifest_version": 2,
   "icons": {
@@ -14,8 +14,7 @@
   "content_scripts": [
     {
       "matches": [
-          "https://demo.videopeers.net/*",
-          "https://www.videopeers.net/*"
+          "https://www.digitalharvestingworks.org/*"
       ],
       "js": ["content.js"]
     }
@@ -23,7 +22,6 @@
   "permissions": [
       "tabs",
       "desktopCapture",
-      "https://demo.videopeers.net/*",
-      "https://www.videopeers.net/*"
+      "https://www.digitalharvestingworks.org/*"
   ]
 }

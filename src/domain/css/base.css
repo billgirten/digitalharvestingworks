@@ -6305,14 +6305,14 @@ a.fbtn:focus, a.fbtn:hover {
     background-color: #2196f3;
     color: white; }
     .card-blue .card-side[href]:focus, .card-blue .card-side[href]:hover {
-      background-color: #1976d2; }
+      background-color: #365d1e; }
   .no-boxshadow .card-blue {
     border-color: #bbdefb; }
 
 .card-blue-bg {
   background-color: #2196f3; }
   .card-blue-bg .card-side {
-    background-color: #1976d2; }
+    background-color: #365d1e; }
     .card-blue-bg .card-side[href]:focus, .card-blue-bg .card-side[href]:hover {
       background-color: #0d47a1; }
 
@@ -7917,7 +7917,7 @@ legend[class*="col-xx-"] {
   z-index: 30; }
 
 .header {
-  background-color: #56a24c;
+  background-color: #3e7936;
   color: white;
   position: fixed;
   top: 0;
@@ -7933,7 +7933,7 @@ legend[class*="col-xx-"] {
   .header:after {
     clear: both; }
   .header.fixed, .header.open, .menu-open .header {
-    background-color: #1976d2;
+    background-color: #365d1e;
     -webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
     box-shadow: 0 1px 10px rgba(0, 0, 0, 0.5); }
   .page-alt .header {
@@ -7945,9 +7945,9 @@ legend[class*="col-xx-"] {
   .page-blue .header {
     background-color: #2196f3; }
     .page-blue .header.fixed, .page-blue .header.open {
-      background-color: #1976d2; }
+      background-color: #365d1e; }
   .menu-open.page-blue .header {
-    background-color: #1976d2; }
+    background-color: #365d1e; }
   .page-green .header {
     background-color: #1d8cb1; }
     .page-green .header.fixed, .page-green .header.open {
@@ -8038,7 +8038,7 @@ legend[class*="col-xx-"] {
       -ms-transform: rotate(-225deg);
       transform: rotate(-225deg); }
       .header .nav > li > a .header-close:after {
-        background-color: #1d8cb1;
+        background-color: #56a24c;
         border-radius: 50%;
         content: '';
         display: block;

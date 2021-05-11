@@ -16,8 +16,8 @@ var app = require("express")(),
 
 
 // sslOptions = {
-//     key : fs.readFileSync('/etc/httpd/conf/ssl.key/www_videopeers_net.key'),
-//     cert : fs.readFileSync('/etc/httpd/conf/ssl.crt/www_videopeers_net.crt')
+//     key : fs.readFileSync('/etc/httpd/conf/ssl.key/www_videofriends_net.key'),
+//     cert : fs.readFileSync('/etc/httpd/conf/ssl.crt/www_videofriends_net.crt')
 // };
 // server = require("https").createServer(sslOptions, app);
 server = require("http").createServer(app);
@@ -66,6 +66,22 @@ app.get("/images/favicons/favicon-32x32.png", function (req, res) {
 app.get("/images/favicons/favicon-96x96.png", function (req, res) {
     res.sendFile(__dirname + "/images/favicons/favicon-96x96.png");
 });
+
+app.get("/images/favicons/android-icon-16x16.png", function (req, res) {
+    res.sendFile(__dirname + "/images/favicons/android-icon-16x16.png");
+});
+
+app.get("/images/favicons/android-icon-36x36.png", function (req, res) {
+    res.sendFile(__dirname + "/images/favicons/android-icon-36x36.png");
+});
+
+app.get("/images/favicons/android-icon-96x96.png", function (req, res) {
+    res.sendFile(__dirname + "/images/favicons/android-icon-96x96.png");
+});
+
+app.get("/images/favicons/android-icon-192x192.png", function (req, res) {
+    res.sendFile(__dirname + "/images/favicons/android-icon-192x192.png");
+});
       
 app.get("/images/promise.jpg", function (req, res) {
     res.sendFile(__dirname + "/images/promise.jpg");
@@ -105,26 +121,6 @@ app.get("/images/profile_hills.png", function (req, res) {
 
 app.get("/images/webtouristextension.png", function (req, res) {
   res.sendFile(__dirname + "/images/webtouristextension.png");
-});
-
-app.get("/images/ads/footerAd1.jpg", function (req, res) {
-  res.sendFile(__dirname + "/images/ads/footerAd1.jpg");
-});
-
-app.get("/images/ads/footerAd2.png", function (req, res) {
-  res.sendFile(__dirname + "/images/ads/footerAd2.png");
-});
-
-app.get("/images/ads/footerAd3.png", function (req, res) {
-  res.sendFile(__dirname + "/images/ads/footerAd3.png");
-});
-
-app.get("/images/ads/footerAd4.jpg", function (req, res) {
-  res.sendFile(__dirname + "/images/ads/footerAd4.jpg");
-});
-
-app.get("/images/ads/footerAd5.jpg", function (req, res) {
-  res.sendFile(__dirname + "/images/ads/footerAd5.jpg");
 });
 
 app.get("/css/base.css", function (req, res) {
@@ -283,7 +279,7 @@ app.post('/sitepost', function(req, res, next) {
         to: "jharris@digitalharvestingworks.com",
         cc: "bxgirten@digitalharvestingworks.com",
         bcc: "sagirten@gmail.com",
-        subject: "Comments from a videopeers.info visitor",
+        subject: "Comments from a video friend",
         generateTextFromHTML: false,
         text: msg,
     }, function(error, response){
@@ -298,73 +294,6 @@ app.post('/sitepost', function(req, res, next) {
 });
 
 
-app.get("/getVideoPeersStatsDaily", function (req, res) {
-    var vpStatsData = "[";
-    //var vpStatsData = [['English', 3],['French', 1],['German', 1],['Spanish', 2]];
-    var vpStatsCollection = digitalharvestingworksDB.collection("videopeersstats");
-    var chartDataSwitch = 0;
-    if(req.query.sw) chartDataSwitch = parseInt(req.query.sw);
-
-    switch(chartDataSwitch) {
-
-        case 0:
-            vpStatsCollection.aggregate([{"$group": {"_id": { "languages": { "languageCode": "$profile.languageCode" }}, count: { $sum: 1 }}},{$sort: {"_id.languages.languageCode":1}}]).toArray(function (err, results) {
-                if(err) {
-                    console.log(err);
-                } else {
-                    if(results.length) {
-                        for(x = 0; x < results.length; x++) {
-                            if(x === 0) {
-                                vpStatsData += "[";
-                            } else {
-                                vpStatsData += ",[";
-                            }
-                            if(results[x]._id.languages.languageCode == "de") vpStatsData += '"German", ' + results[x].count + ']';
-                            if(results[x]._id.languages.languageCode == "en") vpStatsData += '"English", ' + results[x].count + ']';
-                            if(results[x]._id.languages.languageCode == "fr") vpStatsData += '"French", ' + results[x].count + ']';
-                            if(results[x]._id.languages.languageCode == "sp") vpStatsData += '"Spanish", ' + results[x].count + ']';
-                        }
-                        vpStatsData += "]";
-                        res.writeHead(200, JSONResponseHeader);
-                        res.write(vpStatsData);
-                        res.end();
-                    }
-                }
-            });
-            break;
-
-        case 1:
-            vpStatsCollection.aggregate([{$group : {_id : { "ageRange": "$profile.ageRange" }, count: { $sum: 1 }}},{$sort: {"_id.ageRange":1}}]).toArray(function (err, results) {
-                if(err) {
-                    console.log(err);
-                } else {
-                    if(results.length) {
-                        for(x = 0; x < results.length; x++) {
-                            if(x === 0) {
-                                vpStatsData += "[";
-                            } else {
-                                vpStatsData += ",[";
-                            }
-                            if(null === results[x]._id.ageRange) vpStatsData += '"Unspecified", ' + results[x].count + ']';
-                            if(results[x]._id.ageRange == "17") vpStatsData += '"< 18", ' + results[x].count + ']';
-                            if(results[x]._id.ageRange == "25") vpStatsData += '"18 - 25", ' + results[x].count + ']';
-                            if(results[x]._id.ageRange == "34") vpStatsData += '"26 - 34", ' + results[x].count + ']';
-                            if(results[x]._id.ageRange == "50") vpStatsData += '"35 - 50", ' + results[x].count + ']';
-                            if(results[x]._id.ageRange == "501") vpStatsData += '"> 50", ' + results[x].count + ']';
-                        }
-                        vpStatsData += "]";
-console.log(vpStatsData);
-                        res.writeHead(200, JSONResponseHeader);
-                        res.write(vpStatsData);
-                        res.end();
-                    }
-                }
-            });
-            break;
-    }
-});
-
-
 io.sockets.on("connection", function(socket) {
     socket.on("create or join", function (room, profile) {
         var numClients = roomCount(io.sockets.adapter.rooms[room]);
@@ -376,9 +305,9 @@ console.log("Request to create room " + room);
             socket.join(room);
             console.log("room " + room + " has " + (numClients + 1) + " client");
 
-            var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
+            var videofriendsCollection = digitalharvestingworksDB.collection("videofriends");
 console.log("inserting = " + profile.nickname);
-            videoPeersCollection.find({"room":room, "profile.nickname":profile.nickname}).toArray(function (err, results) {
+            videofriendsCollection.find({"room":room, "profile.nickname":profile.nickname}).toArray(function (err, results) {
                 if(err) {
                     console.log(err);
                 } else if (results.length) {
@@ -388,11 +317,11 @@ console.log("inserting = " + profile.nickname);
                     console.log("No document(s) found");
                     dateTimeEpoch = Math.floor(Date.now() / 1000);
 console.log(">>> new socketID = " + socket.id + " started " + dateTimeEpoch);
-                    videoPeersCollection.insert({"room":room, "socketID":socket.id,  "profile":profile, "beginStamp":dateTimeEpoch}, function (err, results) {
+                    videofriendsCollection.insertOne({"room":room, "socketID":socket.id,  "profile":profile, "beginStamp":dateTimeEpoch}, function (err, results) {
                         if(err) {
                             console.log(err);
                         } else {
-                            console.log("Document(s) inserted into videoPeersCollection:", results.result.n);
+                            console.log("Document(s) inserted into videofriendsCollection:", results.result.n);
                         }
                     });
                     socket.emit("created", room, socket.id);
@@ -413,13 +342,13 @@ console.log("Request to join room " + room);
     });
 
 
-    socket.on("find video peers", function(searchData) {
-console.log(">>> INSIDE OF find video peers" + searchData);
+    socket.on("find video friends", function(searchData) {
+console.log(">>> INSIDE OF find video friends" + searchData);
         var searchObj = JSON.parse(searchData);
         var localNickname = searchObj.localNickname;
         var room = searchObj.room;
 
-        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
+        var videofriendsCollection = digitalharvestingworksDB.collection("videofriends");
 // CREATE A DYNAMIC, BUILDABLE STRING TO PERFORM A FIND
         var searchCriteria = '{';
         if(searchObj.remoteNickname) {
@@ -436,13 +365,13 @@ console.log(">>> INSIDE OF find video peers" + searchData);
         searchCriteria += '}';
 console.log(searchCriteria);
         var jsonSearchCriteria = JSON.parse(searchCriteria);
-        videoPeersCollection.find(jsonSearchCriteria).sort({"profile.nickname":1}).toArray(function (err, results) {
+        videofriendsCollection.find(jsonSearchCriteria).sort({"profile.nickname":1}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
             } else {
                 var leanPeersArray = [];
                 if(results.length) {
-                    console.log("find video peers::Document(s) found: ", results.length);
+                    console.log("find video friends::Document(s) found: ", results.length);
                     if(searchCriteria != "{}") {
                         for(x = 0; x < results.length; x++) {
 console.log("*** POPULATE ***");
@@ -457,7 +386,7 @@ console.log("*** BAILING ***");
                         //send back empty results array
                     }
                 }
-                socket.emit("find video peers results", leanPeersArray);
+                socket.emit("find video friends results", leanPeersArray);
             }
         });
 
@@ -466,8 +395,8 @@ console.log("*** BAILING ***");
 
     socket.on("video chat request", function(socketID, requestorNickname, requestorPhoto, requestorRoom, requestorSocketID) {
 console.log(">>> ABOUT TO INVITE socketID " + socketID + " TO CHAT WITH socketID", requestorSocketID);
-        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
-        videoPeersCollection.find({"room": requestorRoom, "profile.nickname":requestorNickname}).toArray(function (err, results) {
+        var videofriendsCollection = digitalharvestingworksDB.collection("videofriends");
+        videofriendsCollection.find({"room": requestorRoom, "profile.nickname":requestorNickname}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
             } else if (results.length) {
@@ -546,22 +475,18 @@ console.log(">>> GOT A WEB TOURIST MESSAGE FOR SOCKET " + socketID);
 
     socket.on("exit room", function(nickname, room) {
 console.log(">>> " + nickname + " IS EXITING ROOM " + room);
-        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
-        videoPeersCollection.find({"room":room, "profile.nickname":nickname}).toArray(function (err, results) {
+        var videofriendsCollection = digitalharvestingworksDB.collection("videofriends");
+        videofriendsCollection.find({"room":room, "profile.nickname":nickname}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
             } else if (results.length) {
                 console.log("Document(s) found for removal");
                 dateTimeEpoch = Math.floor(Date.now() / 1000);
-                captureVideoPeersStats(results[0].socketID,
-                                       results[0].beginStamp,
-                                       dateTimeEpoch,
-                                       results[0].profile);
-                videoPeersCollection.remove({"room": room, "profile.nickname":nickname}, function (err, results) {
+                videofriendsCollection.deleteOne({"room": room, "profile.nickname":nickname}, function (err, results) {
                     if(err) {
                         console.log(err);
                     } else {
-                        console.log("Document(s) removed from videoPeersCollection:", results.result.n);
+                        console.log("Document(s) removed from videofriendsCollection:", results.result.n);
                         // BEFORE - console.log(io.sockets.adapter.rooms);
                         socket.leave(room);
                         // AFTER - console.log(io.sockets.adapter.rooms);
@@ -589,8 +514,8 @@ console.log(">>> forcing " + remoteSocketID + " TO EXIT ROOM");
     function mongoCleanup() {
         var roomManifest = null;
 
-        var videoPeersCollection = digitalharvestingworksDB.collection("videopeers");
-        videoPeersCollection.find({}).toArray(function (err, results) {
+        var videofriendsCollection = digitalharvestingworksDB.collection("videofriends");
+        videofriendsCollection.find({}).toArray(function (err, results) {
             if(err) {
                 console.log(err);
             } else {
@@ -600,34 +525,16 @@ console.log(">>> forcing " + remoteSocketID + " TO EXIT ROOM");
                         if(roomManifest == undefined) {
 console.log(">>> orphan(s) found");
                             dateTimeEpoch = Math.floor(Date.now() / 1000);
-                            captureVideoPeersStats(results[0].socketID,
-                                                   results[0].beginStamp,
-                                                   dateTimeEpoch,
-                                                   results[0].profile);
-                            videoPeersCollection.remove({"room": results[x].room}, function (err, results) {
+                            videofriendsCollection.deleteOne({"room": results[x].room}, function (err, results) {
                                 if(err) {
                                     console.log(err);
                                 } else {
-                                    console.log(">>> orphans(s) removed from videoPeersCollection:", results.result.n);
+                                    console.log(">>> orphans(s) removed from videofriendsCollection:", results.result.n);
                                 }
                             });
                         }
                     }
                 }
-            }
-        });
-    }
-
-    function captureVideoPeersStats(socketID, beginStamp, endStamp, profile) {
-        delete profile.nickname;
-        delete profile.photo;
-        var videoPeersStats = digitalharvestingworksDB.collection("videopeersstats");
-console.log(">>> stats captured");
-        videoPeersStats.insert({"logged":endStamp, "socketID":socketID,  "beginStamp":beginStamp, "endStamp":endStamp, "profile":profile}, function (err, results) {
-            if(err) {
-                console.log(err);
-            } else {
-                console.log("Document(s) inserted into videoPeersStats:", results.result.n);
             }
         });
     }

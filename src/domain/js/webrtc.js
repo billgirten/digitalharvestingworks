@@ -97,7 +97,7 @@ function initConnection() {
         if(isInvitedPeer) {
             setTimeout(function() {
                 flashPhoto();
-                findVideoPeers();
+                findVideoFriends();
             }, 2400);
             //document.querySelector("#requesting-peer-socketID").innerText = remotePeerSocketID;
             //acceptRequestingPeer(true);
@@ -111,7 +111,7 @@ function initConnection() {
         isInitiator = false;
     });
 
-    socket.on("find video peers results", function(data) {
+    socket.on("find video friends results", function(data) {
         showAvailableMatchingPeerCards(data);
     });
 
@@ -204,7 +204,6 @@ console.log(">>> got webtourist message")
 
 
 function poseForSnapshot() {
-
     if(navigator.getUserMedia) {
         navigator.getUserMedia(constraints, getUserMediaSuccess, getUserMediaError);
         if(null == room) initConnection();
@@ -232,12 +231,12 @@ function flashPhoto() {
     photoContext.drawImage(localVideo, 0, 0, photoContextW, photoContextH);
     photoDataURL = photo.toDataURL("image/png");
     photoDataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-    localProfile.photo = photoDataURL;
-    renderLocalPhoto();
 }
 
 
 function getUserMediaSuccess(stream) {
+    console.log('got a stream');
+    localStream = stream;
     meConnectedLocalVideo.srcObject = stream;
     meConnectedLocalVideo.muted = true;
     document.querySelector("#connection-button-presence").innerText = contextLanguageSettings.unavailable;
