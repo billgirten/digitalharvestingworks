@@ -210,12 +210,6 @@ function poseForSnapshot() {
     } else {
         alert("Your browser does not support getUserMedia API");
     }
-
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then(getUserMediaSuccess)
-        .catch(function(e) {
-            alert('getUserMedia() error: ' + e.name);
-        });
     if(null == room) initConnection();
 }
 
@@ -237,9 +231,16 @@ function flashPhoto() {
 function getUserMediaSuccess(stream) {
     console.log('got a stream');
     localStream = stream;
-    meConnectedLocalVideo.srcObject = stream;
+    localChatVideoSmall.srcObject = localStream;
+    localChatVideoSmall.muted = true;
+    localChatVideoSmall.removeAttribute("controls");
+    localShareVideoSmall.srcObject = localStream;
+    localShareVideoSmall.muted = true;
+    localShareVideoSmall.removeAttribute("controls");
+    meConnectedLocalVideo.srcObject = localStream;
     meConnectedLocalVideo.muted = true;
     document.querySelector("#connection-button-presence").innerText = contextLanguageSettings.unavailable;
+    // room = randomToken(); ?????? maybe in the future, gen a new one on each new stream
     if(currentPanel == "connection") {
         document.querySelector("#connection-button-find-peers").disabled = false;
         document.querySelector("#connection-button-invite-peer").disabled = false;
@@ -626,6 +627,9 @@ function stopMediaStream() {
         track.stop();
     });
     localStream = null;
+    localChatVideoSmall.srcObject = null;
+    localShareVideoSmall.srcObject = null;
+    meConnectedLocalVideo.srcObject = null;
     isRemoteConnected = false;
 }
 
