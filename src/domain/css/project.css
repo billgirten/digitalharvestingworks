@@ -174,14 +174,14 @@
     display:none;
 }
 
-#tc {
-    color: #2196f3;
-    text-decoration: none;
+#tc, #pp {
+    color: #fff;
 }
 
-#pp {
-    color: #2196f3;
-    text-decoration: none;
+a:focus, a:hover {
+    outline: 0;
+    font-weight: bold;
+    text-decoration: underline;    
 }
 
 #modal-getUserMedia-image {

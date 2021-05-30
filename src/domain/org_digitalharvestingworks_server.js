@@ -245,7 +245,7 @@ app.get("/geti18nStuff", function (req, res) {
 
 app.get("/getLegalInfo", function (req, res) {
     var legalInfo = {};
-    var legalCollection = digitalharvestingworksDB.collection("legal");
+    var legalCollection = digitalharvestingworksDB.collection("digitalharvestingworks_legal");
     legalCollection.find({},{_id:0}).toArray(function (err, results) {
         if(err) {
             console.log(err);

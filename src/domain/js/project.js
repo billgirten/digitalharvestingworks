@@ -23,14 +23,16 @@ document.querySelector('#modal-share-stuff-fileBox').addEventListener('change', 
 
 var nicknameEntry = document.querySelector("#start-nickname");
 nicknameEntry.onkeyup = function(evt) {
-    evt = evt || window.event;
-    if(evt.keyCode == 13) {
-        if(!document.querySelector("#start-button-next").disabled) startJump();
+    var tempNickname = document.querySelector("#start-nickname").value.trim();
+    if(tempNickname.length > 0) {
+        document.querySelector("#start-txt-button-next").disabled = false;
+        document.querySelector("#start-video-button-next").disabled = false;
+        document.querySelector("#connection-local-nickname").value = document.querySelector("#start-nickname").value;
     } else {
-      keyNickname();
+        document.querySelector("#start-txt-button-next").disabled = true;
+        document.querySelector("#start-video-button-next").disabled = true;
     }
 };
-
 
 function getParameter(name, url) {
     if(!url) url = window.location.href;
@@ -319,8 +321,12 @@ $(document).ready(function() {
         document.querySelector("#connection-modal-helpful-tips").click();
     });
 
-    $('#start-button-next').click(function() {
-        startJump();
+    $('#start-txt-button-next').click(function() {
+        startTxtJump();
+    });
+
+    $('#start-video-button-next').click(function() {
+        startVideoJump();
     });
 
     $('#menu-link-clear-profile-settings').click(function() {
@@ -575,7 +581,7 @@ console.log("about to postMessage");
     });
 
     establishAudioContext();
-    // fetchLegalInfo();
+    fetchLegalInfo();
     
     if(isInvitedPeer) {
         languageCode = getParameter("lcode");
@@ -597,11 +603,6 @@ console.log("about to postMessage");
     refreshIntervalNetSpeed = setInterval(function() {
         clockNetSpeed();
     }, 5000);
-
-    clearInterval(refreshIntervalAd);
-    refreshIntervalAd = setInterval(function() {
-        rotateAd();
-    }, 15000);
 
     if(isInvitedPeer) {
         document.querySelector("#connection-local-nickname").value = localProfile.nickname;
@@ -661,11 +662,12 @@ function establishContextLanguage() {
             document.querySelector("#connection-local-peer-heading").innerText = contextLanguageSettings.me;
             document.querySelector("#connection-button-available").innerText = contextLanguageSettings.available;
             document.querySelector("#connection-button-presence").innerText = contextLanguageSettings.unavailable;
-            if(localProfile.nickname) {
-                document.querySelector("#start-button-next").innerText = contextLanguageSettings.start;
-            } else {
-                document.querySelector("#start-button-next").innerText = contextLanguageSettings.next;
-            }
+            // if(localProfile.nickname) {
+            //     document.querySelector("#start-video-button-next").innerText = contextLanguageSettings.start;
+            //     document.querySelector("#start-video-button-next").innerText = contextLanguageSettings.start;
+            // } else {
+            //     document.querySelector("#start-video-button-next").innerText = contextLanguageSettings.next;
+            // }
             document.querySelector("#connection-remote-language-label").innerText = contextLanguageSettings.findpeerlanguage;
             document.querySelector("#connection-remote-nickname-label").innerText = contextLanguageSettings.nickname;
             document.querySelector("#connection-button-find-peers").innerText = contextLanguageSettings.findpeers;
@@ -768,7 +770,8 @@ function startReset() {
         document.querySelector("#start-nickname").value = localProfile.nickname;
         document.querySelector("#start-nickname").setAttribute("disabled", true);
         document.querySelector("#start-nickname-label").setAttribute("style", "display:none");
-        document.querySelector("#start-button-next").disabled = false;
+        document.querySelector("#start-txt-button-next").disabled = false;
+        document.querySelector("#start-video-button-next").disabled = false;
     }
 }
 
@@ -791,18 +794,7 @@ function renderLocalPhoto() {
 }
 
 
-function keyNickname() {
-    var tempNickname = document.querySelector("#start-nickname").value.trim();
-    if(tempNickname.length > 0) {
-        document.querySelector("#start-button-next").disabled = false;
-        document.querySelector("#connection-local-nickname").value = document.querySelector("#start-nickname").value;
-    } else {
-        document.querySelector("#start-button-next").disabled = true;
-    }
-}
-
-
-function startJump() {
+function startVideoJump() {
     nextCard("connection");
 }
 
@@ -1257,25 +1249,6 @@ function clockNetSpeed() {
     });
 }
 
-function rotateAd() {
-    adRotationPtr++;
-    if(adRotationPtr > 5) adRotationPtr = 0;
-    if($('#tc_section').is(":visible")) adRotationPtr = 0;
-    if($('#pp_section').is(":visible")) adRotationPtr = 0;
-    if(adRotationPtr === 0) {
-        document.querySelector("#footer-ad-image").style.display = "none";
-        document.querySelector("#footer-tw-rights").style.display = "block";
-    } else {
-        document.querySelector("#footer-tw-rights").style.display = "none";
-        document.querySelector("#footer-ad-image").style.display = "block";
-    }
-    if(adRotationPtr === 1) document.querySelector("#footer-ad-image").src = "images/ads/footerAd1.jpg";
-    if(adRotationPtr === 2) document.querySelector("#footer-ad-image").src = "images/ads/footerAd2.png";
-    if(adRotationPtr === 3) document.querySelector("#footer-ad-image").src = "images/ads/footerAd3.png";
-    if(adRotationPtr === 4) document.querySelector("#footer-ad-image").src = "images/ads/footerAd4.jpg";
-    if(adRotationPtr === 5) document.querySelector("#footer-ad-image").src = "images/ads/footerAd5.jpg";
-}
-
 
 function checkMinimalProfile() {
     if(document.querySelector('#profile-native-language').selectedIndex == -1
@@ -1364,8 +1337,10 @@ function clearSettings() {
     document.querySelector("#start-nickname").value = "";
     document.querySelector("#start-nickname").disabled = false;
     document.querySelector("#start-nickname-label").setAttribute("style", "display:block");
-    document.querySelector("#start-button-next").innerText = "Next";
-    document.querySelector("#start-button-next").disabled = true;
+    document.querySelector("#start-txt-button-next").innerText = "Send a Gospel txt";
+    document.querySelector("#start-txt-button-next").disabled = true;
+    document.querySelector("#start-video-button-next").innerText = "Be a Video Friend";
+    document.querySelector("#start-video-button-next").disabled = true;
     document.querySelector("#profile-nickname").value = " ";
     document.querySelector("#connection-remote-peer-native-language").value = " ";
 }
